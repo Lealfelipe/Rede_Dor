@@ -1,0 +1,93 @@
+# Questão 3: Interoperabilidade
+# Uma clínica de saúde deseja permitir que pacientes agendem consultas em um website
+# parceiro. Especifique uma API que realize o agendamento e receba os dados do paciente,
+# médico, convênio e plano
+
+info:
+  title: API de Agendamento de Consultas
+  description: API para permitir que pacientes agendem consultas em um website parceiro.
+
+servers:
+  - url: https://clinicarededor.com/api/
+
+paths:
+  /consultas:
+    post:
+      summary: Agendar consulta
+      description: Permite que um paciente agende uma consulta.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Consulta'
+      responses:
+        '201':
+          description: Consulta agendada com sucesso
+        '400':
+          description: Requisição inválida
+
+  /consultas/{id}:
+    get:
+      summary: Ver Consultas 
+      description: Permite ao usuário que verifique suas consultas agendadas e já realizadas
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Consulta'
+      responses:
+        '201':
+          description: Será apresentado todas consultas realizadas pelo usuário que tenha o {id} definido como parâmetro
+        '400':
+          description: Será apresentado informação de nenhuma consulta realizada
+
+  /consultas/{id}/reagendar:
+    put:
+      summary: Editar consultas agendadas
+      description: Permite ao usuário editar informações como dados da consulta, realizar o reagendamento de uma consulta agendada ou cancelar uma consulta agendada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Consulta'
+      responses:
+        '201':
+          description: Consulta editada com sucesso
+        '400':
+          description: Consulta não encontrada
+
+    
+
+components:
+  schemas:
+    Consulta:
+      type: object
+      properties:
+        paciente:
+          type: object
+          properties:
+            nome:
+              type: string
+            cpf:
+              type: string
+            convenio:
+              type: string
+            plano:
+              type: string
+        medico:
+          type: object
+          properties:
+            nome:
+              type: string
+            especialidade:
+              type: string
+        data:
+          type: string
+          format: date-time
+      required:
+        - paciente
+        - medico
+        - data
